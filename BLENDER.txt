@@ -1,0 +1,71 @@
+######BLENDER
+
+Note = 
+
+1.Untuk response dari Blender apakah final state atau bukan? Final State
+2.Jika saat kirim ke WABA gagal apakah Blender akan kirim DR gagal juga atau tidak? Blender akan kirim DR gagal
+3.Untuk Interface Blender apakah support encoding selain 7 bit? 7 bit mengikuti API reachme
+4.Untuk list error code apakah sama dengan ReachMe? List error code untuk API sama dengan Reachme kecuali untuk DR whatsapp ada
+5.Untuk pengiriman LMS dari SMPP bisa dikirim 2 kali dan kirim ke Blender apakah 2 kali juga? LMS dipecah dan dikirim dalam 2 hit API
+6.Untuk interface Blender ini apakah akan digunakan untuk pengiriman notif untuk reward juga atau tidak? Tidak ada
+7.Untuk SMS yang digunakan apakah hanya SMS MT saja atau akan ada SMS MO juga? SMS MT
+8.Untuk timeout di sisi Blender berapa lama? 5 detik
+9.untuk DR apakah yg dikirimkan adalah final state (jika WA gagal DR adalah yg dari ReachMe)? Jka whatsapp gagal  DR tetap dari Blender
+10.Untuk TPS yang digunakan berapa? 100 TPS
+11.Untuk spec API apakah bisa dikirimkan?  Attached , sebagai tambahan untuk Spec inventory API Blender ini akan ada beberapa service dengan spec sama tetapi   URL yg berbeda , contoh: ADA OTP dan ADA Notify, jadi diharapkan inventory interface API untuk Blender configurable URL endpoint nya
+12.klo misal blender tidak kirim DR apakah reachme akan kirim SMS ?
+
+
+#####Config WEB
+
+ext entity name =API_BLENDER
+ip connect to blender = 
+
+
+
+
+####Skenario=
+
+1.Whatsapp Success
+
+SMPP Client -> (Submit SM) -> SMPP ReachMe gw3pt -> () -> Interface GWOLO -> (Api Submit) -> Blender -> (Kirim Final DR) -> Interface GWOLO -> (Kirim Final DR) -> SMPP ReachMe gw3pt -> (Kirim Final DR) -> SMPP Client.
+
+2. Whatsapp Fail Over
+
+SMPP Client -> (Submit SM) -> SMPP ReachMe gw3pt -> () -> Interface GWOLO -> (Api Submit) -> Blender (Kondisi gagal kirim ke WABA,jadi tidak ada trigger di sisi reachme,failover ada di blender)-> (Api Submit) -> SMPP ReachMe gw3pt (kondisi sukses kirim sms lalu next kirim DR) -> Blender -> (Kirim Final DR) -> Interface GWOLO -> (Kirim Final DR) -> SMPP ReachMe gw3pt -> (Kirim Final DR) -> SMPP Client.
+
+
+
+
+note = 
+1. apakah saat gagal ke waba blender tetap kirim DR ?
+2. 
+
+
+
+######Kebutuhan=
+1. User Blender HIT ke Reachme after failover=
+brand = REST_API_BLENDER_ADA_NOTIF_TEST
+user = Bldant01
+pass = Tblend1!
+fix token = dbcdb416832b86660503c47f43ba20bf
+
+brand = REST_API_BLENDER_BRAND_OTP_TEST
+user = Bldant02
+pass = Tblend2!
+fix token = 314ce87a22ddad63d1517e64308b371b
+
+
+
+2. URL DR ke ReachMe=
+
+https://staging.reachme.id/ReachMe_SMSBlender/smsdr.php
+
+3.URL api reachme hit ke blender=
+
+setting url ini ada di masking = https://api.reachme.id/interactive_api/service/rest_api_v2botp.php~314ce87a22ddad63d1517e64308b371b
+
+ADA NOTIF  : https://api.reachme.id/interactive_api/service/ada_notif~314ce87a22ddad63d1517e64308b371b
+BRAND OTP : https://api.reachme.id/interactive_api/service/rest_api_v2s2.php >>>content harus ada  4 -6 digit angka
+
+4.
